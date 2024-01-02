@@ -1,4 +1,5 @@
 /temp/
+__pycache__
 *.swp
 *.swo
 *.swn
