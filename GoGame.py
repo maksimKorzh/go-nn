@@ -8,7 +8,7 @@ import numpy as np
 class GoGame(Game):
     square_content = {
         -1: "X",
-        +0: "-",
+        +0: ".",
         +1: "O"
     }
 
@@ -103,17 +103,17 @@ class GoGame(Game):
 
     @staticmethod
     def display(board):
-        n = board.shape[0]
-        print("   ", end="")
-        for y in range(n):
-            print(y, end=" ")
-        print("")
-        print("-----------------------")
-        for y in range(n):
-            print(y, "|", end="")    # print the row #
-            for x in range(n):
-                piece = board[y][x]    # get the piece to print
-                print(GoGame.square_content[piece], end=" ")
-            print("|")
+      n = board.shape[0]
+      print('\n   ', end='')
+      for y in range(n): print(y, end=' ')
+      print('')
+      for y in range(n):
+        print(y, ' ', end='')    # print the row #
+        for x in range(n):
+          piece = board[y][x]    # get the piece to print
+          print(GoGame.square_content[piece], end=' ')
+        print('')
+      print('')
 
-        print("-----------------------")
+game = GoGame(5)
+game.display(game.getInitBoard())
