@@ -16,7 +16,7 @@ any agent.
 #mini_othello = False  # Play in 6x6 instead of the normal 8x8.
 human_vs_cpu = True
 
-g = GoGame(9)
+g = GoGame(5)
 
 # all players
 rp = RandomPlayer(g).play

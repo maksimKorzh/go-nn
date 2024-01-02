@@ -14,49 +14,50 @@ class GoGame(Game):
 
     @staticmethod
     def getSquarePiece(piece):
-        return GoGame.square_content[piece]
+      return GoGame.square_content[piece]
 
     def __init__(self, n):
-        self.n = n
+      self.n = n
 
     def getInitBoard(self):
-        # return initial board (numpy board)
-        b = Board(self.n)
-        return np.array(b.pieces)
+      # return initial board (numpy board)
+      b = Board(self.n)
+      return np.array(b.pieces)
 
     def getBoardSize(self):
-        # (a,b) tuple
-        return (self.n, self.n)
+      # (a,b) tuple
+      return (self.n, self.n)
 
     def getActionSize(self):
-        # return number of actions
-        return self.n*self.n + 1
+      # return number of actions
+      return self.n*self.n + 1 # TODO: +1 ???
 
     def getNextState(self, board, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
-        if action == self.n*self.n:
-            return (board, -player)
+        # if action == self.n*self.n: # TODO: pass?
+        #     return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board)
-        move = (int(action/self.n), action%self.n)
+        move = action# (int(action/self.n), action%self.n)
         b.execute_move(move, player)
         return (b.pieces, -player)
 
     def getValidMoves(self, board, player):
         # return a fixed size binary vector
-        valids = [0]*self.getActionSize()
-        b = Board(self.n)
-        b.pieces = np.copy(board)
-        legalMoves =  b.get_legal_moves(player)
-        if len(legalMoves)==0:
-            valids[-1]=1
-            return np.array(valids)
-        for x, y in legalMoves:
-            valids[self.n*x+y]=1
+        valids = [1]*self.getActionSize()
+        #b = Board(self.n)
+        #b.pieces = np.copy(board)
+        #legalMoves =  b.get_legal_moves(player)
+        #if len(legalMoves)==0:
+        #    valids[-1]=1
+        #    return np.array(valids)
+        #for x, y in legalMoves:
+        #    valids[self.n*x+y]=1
         return np.array(valids)
 
     def getGameEnded(self, board, player):
+        return 0
         # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
         # player = 1
         b = Board(self.n)
@@ -115,5 +116,13 @@ class GoGame(Game):
         print('')
       print('')
 
-game = GoGame(5)
-game.display(game.getInitBoard())
+def test():
+    game = GoGame(5)
+    board = game.getInitBoard()
+    game.display(board)
+    player = 1
+    action = (0,2)
+    board, player = game.getNextState(board, player, action)
+    game.display(board)
+
+#test()

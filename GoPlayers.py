@@ -28,16 +28,18 @@ class HumanGoPlayer():
             input_a = input_move.split(" ")
             if len(input_a) == 2:
                 try:
-                    x,y = [int(i) for i in input_a]
-                    if ((0 <= x) and (x < self.game.n) and (0 <= y) and (y < self.game.n)) or \
-                            ((x == self.game.n) and (y == 0)):
-                        a = self.game.n * x + y if x != -1 else self.game.n ** 2
-                        if valid[a]:
-                            break
+                   x,y = [int(i) for i in input_a]
+                   #if ((0 <= x) and (x < self.game.n) and (0 <= y) and (y < self.game.n)) or \
+                   #        ((x == self.game.n) and (y == 0)):
+                   #    a = self.game.n * x + y if x != -1 else self.game.n ** 2
+                   #   # if valid[a]:
+                   a = (x, y)
+                   break
                 except ValueError:
                     # Input needs to be an integer
                     'Invalid integer'
             print('Invalid move')
+        print("RETURN ACTION:", a)
         return a
 
 

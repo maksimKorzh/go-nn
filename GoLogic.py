@@ -16,19 +16,12 @@ class Board():
     __directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
 
     def __init__(self, n):
-        "Set up initial board configuration."
-
-        self.n = n
-        # Create the empty board array.
-        self.pieces = [None]*self.n
-        for i in range(self.n):
-            self.pieces[i] = [0]*self.n
-
-        # Set up the initial 4 pieces.
-        self.pieces[int(self.n/2)-1][int(self.n/2)] = 1
-        self.pieces[int(self.n/2)][int(self.n/2)-1] = 1
-        self.pieces[int(self.n/2)-1][int(self.n/2)-1] = -1;
-        self.pieces[int(self.n/2)][int(self.n/2)] = -1;
+      "Set up initial board configuration."
+      self.n = n
+      # Create the empty board array.
+      self.pieces = [None]*self.n
+      for i in range(self.n):
+        self.pieces[i] = [0]*self.n
 
     # add [][] indexer syntax to the Board
     def __getitem__(self, index): 
@@ -97,21 +90,15 @@ class Board():
         return moves
 
     def execute_move(self, move, color):
-        """Perform the given move on the board; flips pieces as necessary.
-        color gives the color pf the piece to play (1=white,-1=black)
-        """
+      """Perform the given move on the board; flips pieces as necessary.
+      color gives the color pf the piece to play (1=white,-1=black)
+      """
 
-        #Much like move generation, start at the new piece's square and
-        #follow it on all 8 directions to look for a piece allowing flipping.
+      #Much like move generation, start at the new piece's square and
+      #follow it on all 8 directions to look for a piece allowing flipping.
 
-        # Add the piece to the empty square.
-        # print(move)
-        flips = [flip for direction in self.__directions
-                      for flip in self._get_flips(move, direction, color)]
-        assert len(list(flips))>0
-        for x, y in flips:
-            #print(self[x][y],color)
-            self[x][y] = color
+      # Add the piece to the empty square.
+      self[move[1]][move[0]] = color
 
     def _discover_move(self, origin, direction):
         """ Returns the endpoint for a legal move, starting at the given origin,
