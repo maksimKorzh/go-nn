@@ -42,7 +42,9 @@ class Board():
             self.execute_move((x, y), color, ko)
             liberties = []
             self.count(x, y, color, liberties, [])
-            if len(liberties): moves.update({(x, y)})
+            print("side:", color, 'sq', x, y, 'content', self[x][y], "liberties", liberties)
+            #if len(liberties): moves.update({(x, y)})
+            moves.update({(x, y)})
             self.pieces = np.copy(old_board)
       return list(moves)
 
@@ -89,11 +91,34 @@ class Board():
           if self[x][y] == 2: self[x][y] = 1
           if self[x][y] == -2: self[x][y] = -1
           if self[x][y] == 3: self[x][y] = 0
+          if self[x][y] == 4: self[x][y] = 0
 
-    def evaluate(self, color):
-      """Counts the # pieces of the given color
-      (1 for white, -1 for black, 0 for empty spaces)"""
-      count = 0
+    # Count territory territory
+    def count_territory(self, x, y, pointsCount, pointsColor):
+      if x < 0 or y < 0 or x >= self.n or y >= self.n: return
+      if self[x][y] == 0:
+        pointsCount.append((x, y))
+        self[x][y] = 4
+        self.count_territory(x, y-1, pointsCount, pointsColor)
+        self.count_territory(x, y+1, pointsCount, pointsColor)
+        self.count_territory(x-1, y, pointsCount, pointsColor)
+        self.count_territory(x+1, y, pointsCount, pointsColor)
+      elif self[x][y] != 4:
+        pointsColor.append(self[x][y])
+      if len(pointsColor) == 0: return [0, len(pointsCount)]
+      elif all(element == pointsColor[0] for element in pointsColor):
+        return [pointsColor[0], len(pointsCount)]
+      else: return [0, len(pointsCount)]
 
-      return count
-
+    # Evaluate game result
+    def score_game(self):
+      scorePosition = [0, 0, 0];
+      for y in range(self.n):
+        for x in range(self.n):
+          if self[x][y]: continue
+          pointsCount = []
+          pointsColor = []
+          result = self.count_territory(x, y, pointsCount, pointsColor)
+          scorePosition[result[0]] += result[1];
+      self.restore_board();
+      return scorePosition;

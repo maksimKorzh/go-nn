@@ -44,6 +44,7 @@ class GoGame(Game):
       return (b.pieces, -player, ko)
 
     def getValidMoves(self, board, player, ko):
+      print("getValideMoves player", player)
       # return a fixed size binary vector
       valids = [0]*self.getActionSize()
       b = Board(self.n)
@@ -57,18 +58,16 @@ class GoGame(Game):
       return np.array(valids)
 
     def getGameEnded(self, board, player):
-        return 0
-        # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
-        # player = 1
-        #b = Board(self.n)
-        #b.pieces = np.copy(board)
-        #if b.has_legal_moves(player):
-        #    return 0
-        #if b.has_legal_moves(-player):
-        #    return 0
-        #if b.countDiff(player) > 0:
-        #    return 1
-        #return -1
+      # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
+      b = Board(self.n)
+      b.pieces = np.copy(board)
+      finalScore = b.score_game()
+      if finalScore[0]: return 0
+      elif finalScore[1] == self.n ** 2 - 1: return 0
+      else:
+        result = 1 if finalScore[1] > finalScore[-1] else -1
+        print("game ended:", finalScore)
+        return result
 
     def getCanonicalForm(self, board, player):
       # return state if player==1, else return -state if player==-1
@@ -90,16 +89,11 @@ class GoGame(Game):
       return l
 
     def stringRepresentation(self, board):
-        return board.tostring()
+      return board.tostring()
 
     def stringRepresentationReadable(self, board):
-        board_s = "".join(self.square_content[square] for row in board for square in row)
-        return board_s
-
-    def getScore(self, board, player):
-      b = Board(self.n)
-      b.pieces = np.copy(board)
-      return b.evaluate(player)
+      board_s = "".join(self.square_content[square] for row in board for square in row)
+      return board_s
 
     @staticmethod
     def display(board):
@@ -117,12 +111,17 @@ class GoGame(Game):
 
 def test():
   game = GoGame(5)
-  board = game.getInitBoard()
-  game.display(board)
-  ko = (-1, -1)
+  #board = game.getInitBoard()
+  board = np.array([
+    [0, 0, -1, 1, 0],
+    [0, 0, -1, 1, 0],
+    [0, 0, -1, 1, 0],
+    [-1, -1, -1, 1, 1],
+    [0, 0, -1, 1, 0],
+  ])
   player = 1
-  action = 0
-  board, player, ko = game.getNextState(board, player, action, ko)
+  ko = (-1, -1)
   game.display(board)
-  print(game.getScore(board, player))
-test()
+  print(game.getGameEnded(board, player))
+  game.display(board)
+#test()

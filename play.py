@@ -19,8 +19,8 @@ human_vs_cpu = True
 g = GoGame(5)
 
 # all players
-rp = RandomPlayer(g).play
-gp = GreedyGoPlayer(g).play
+#rp = RandomPlayer(g).play
+#gp = GreedyGoPlayer(g).play
 hp = HumanGoPlayer(g).play
 
 
