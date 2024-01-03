@@ -18,6 +18,7 @@ class Board():
     def __init__(self, n):
       "Set up initial board configuration."
       self.n = n
+      self.ko = (-1, -1)
       # Create the empty board array.
       self.pieces = [None]*self.n
       for i in range(self.n):
@@ -45,6 +46,7 @@ class Board():
       """Perform the given move on the board; flips pieces as necessary.
       color gives the color pf the piece to play (1=white,-1=black)
       """
+      self.ko = (-1, -1)
       self[move[1]][move[0]] = color
       print('EXECUTED for', color)
       self.captures(-color);
@@ -57,7 +59,9 @@ class Board():
             block = []
             self.count(x, y, color, liberties, block)
             if len(liberties) == 0:
+              if len(block) == 1: self.ko = (block[0][1], block[0][0])
               for captured in block:
+                print('KO init:', self.ko, block, captured[0], captured[1])
                 self[captured[0]][captured[1]] = 0
             self.restore_board()
 
@@ -75,11 +79,11 @@ class Board():
         self[x][y] = 3
         liberties.append((x, y))
 
-      print('PRINT BOARD')
-      for y in range(self.n):
-        for x in range(self.n):
-          print(self[y][x], end=' ')
-        print('')
+      #print('PRINT BOARD')
+      #for y in range(self.n):
+      #  for x in range(self.n):
+      #    print(self[y][x], end=' ')
+      #  print('')
 
     def restore_board(self):
       for y in range(self.n):
