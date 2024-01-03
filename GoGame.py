@@ -33,28 +33,28 @@ class GoGame(Game):
       return self.n*self.n + 1 # TODO: +1 ???
 
     def getNextState(self, board, player, action, ko):
-        # if player takes action on board, return next (board,player)
-        # action must be a valid move
-        if action == self.n*self.n: # TODO: pass? not valid?
-          return (board, -player)
-        b = Board(self.n)
-        b.pieces = np.copy(board)
-        move = (int(action/self.n), action%self.n)
-        ko = b.execute_move(move, player, ko)
-        return (b.pieces, -player, ko)
+      # if player takes action on board, return next (board,player)
+      # action must be a valid move
+      if action == self.n*self.n: # TODO: pass? not valid?
+        return (board, -player)
+      b = Board(self.n)
+      b.pieces = np.copy(board)
+      move = (int(action/self.n), action%self.n)
+      ko = b.execute_move(move, player, ko)
+      return (b.pieces, -player, ko)
 
     def getValidMoves(self, board, player, ko):
-        # return a fixed size binary vector
-        valids = [0]*self.getActionSize()
-        b = Board(self.n)
-        b.pieces = np.copy(board)
-        legalMoves =  b.get_legal_moves(player, ko)
-        if len(legalMoves)==0:
-          valids[-1]=1
-          return np.array(valids)
-        for x, y in legalMoves:
-          valids[self.n*x+y]=1
+      # return a fixed size binary vector
+      valids = [0]*self.getActionSize()
+      b = Board(self.n)
+      b.pieces = np.copy(board)
+      legalMoves =  b.get_legal_moves(player, ko)
+      if len(legalMoves)==0:
+        valids[-1]=1
         return np.array(valids)
+      for x, y in legalMoves:
+        valids[self.n*x+y]=1
+      return np.array(valids)
 
     def getGameEnded(self, board, player):
         return 0
@@ -71,24 +71,23 @@ class GoGame(Game):
         #return -1
 
     def getCanonicalForm(self, board, player):
-        # return state if player==1, else return -state if player==-1
-        return player*board
+      # return state if player==1, else return -state if player==-1
+      return player*board
 
     def getSymmetries(self, board, pi):
-        # mirror, rotational
-        assert(len(pi) == self.n**2+1)  # 1 for pass
-        pi_board = np.reshape(pi[:-1], (self.n, self.n))
-        l = []
-
-        for i in range(1, 5):
-            for j in [True, False]:
-                newB = np.rot90(board, i)
-                newPi = np.rot90(pi_board, i)
-                if j:
-                    newB = np.fliplr(newB)
-                    newPi = np.fliplr(newPi)
-                l += [(newB, list(newPi.ravel()) + [pi[-1]])]
-        return l
+      # mirror, rotational
+      assert(len(pi) == self.n**2+1)  # 1 for pass
+      pi_board = np.reshape(pi[:-1], (self.n, self.n))
+      l = []
+      for i in range(1, 5):
+        for j in [True, False]:
+          newB = np.rot90(board, i)
+          newPi = np.rot90(pi_board, i)
+          if j:
+            newB = np.fliplr(newB)
+            newPi = np.fliplr(newPi)
+          l += [(newB, list(newPi.ravel()) + [pi[-1]])]
+      return l
 
     def stringRepresentation(self, board):
         return board.tostring()
@@ -98,9 +97,9 @@ class GoGame(Game):
         return board_s
 
     def getScore(self, board, player):
-        b = Board(self.n)
-        b.pieces = np.copy(board)
-        return b.countDiff(player)
+      b = Board(self.n)
+      b.pieces = np.copy(board)
+      return b.evaluate(player)
 
     @staticmethod
     def display(board):
@@ -117,14 +116,13 @@ class GoGame(Game):
       print('')
 
 def test():
-    game = GoGame(5)
-    board = game.getInitBoard()
-    game.display(board)
-    ko = (-1, -1)
-    print('Ko after:', ko)
-    player = 1
-    action = 0
-    board, player, ko = game.getNextState(board, player, action, ko)
-    game.display(board)
-    print('Ko after:', ko)
-#test()
+  game = GoGame(5)
+  board = game.getInitBoard()
+  game.display(board)
+  ko = (-1, -1)
+  player = 1
+  action = 0
+  board, player, ko = game.getNextState(board, player, action, ko)
+  game.display(board)
+  print(game.getScore(board, player))
+test()

@@ -90,3 +90,10 @@ class Board():
           if self[x][y] == -2: self[x][y] = -1
           if self[x][y] == 3: self[x][y] = 0
 
+    def evaluate(self, color):
+      """Counts the # pieces of the given color
+      (1 for white, -1 for black, 0 for empty spaces)"""
+      count = 0
+
+      return count
+
