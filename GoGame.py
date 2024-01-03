@@ -7,9 +7,9 @@ import numpy as np
 
 class GoGame(Game):
     square_content = {
-        -1: "X",
+        -1: "0",
         +0: ".",
-        +1: "O"
+        +1: "X"
     }
 
     @staticmethod
@@ -35,7 +35,7 @@ class GoGame(Game):
     def getNextState(self, board, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
-        # if action == self.n*self.n: # TODO: pass?
+        # if action == self.n*self.n: # TODO: pass? not valid?
         #     return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board)
