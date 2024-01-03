@@ -10,6 +10,9 @@ Board data:
 Squares are stored and manipulated as (x,y) tuples.
 x is the column, y is the row.
 '''
+
+import numpy as np
+
 class Board():
 
     # list of all 8 directions on the board, as (x,y) offsets
@@ -28,27 +31,32 @@ class Board():
     def __getitem__(self, index): 
         return self.pieces[index]
 
-    #def get_legal_moves(self, color):
-    #    """Returns all the legal moves for the given color.
-    #    (1 for white, -1 for black
-    #    """
-    #    moves = set()  # stores the legal moves.
-
-    #    # Get all the squares with pieces of the given color.
-    #    for y in range(self.n):
-    #        for x in range(self.n):
-    #            if self[x][y]==color:
-    #                newmoves = self.get_moves_for_square((x,y))
-    #                moves.update(newmoves)
-    #    return list(moves)
+    def get_legal_moves(self, color):
+      """Returns all the legal moves for the given color.
+      (1 for white, -1 for black
+      """
+      print('Ko before:', self.ko)
+      moves = set()
+      for y in range(self.n):
+        for x in range(self.n):
+          if self[y][x] == 0 and (x, y) != self.ko:
+            old_board = np.copy(self.pieces)
+            old_ko = self.ko
+            self.execute_move((x, y), color)
+            liberties = []
+            self.count(x, y, color, liberties, [])
+            #if len(liberties): moves.update({(x, y)})
+            moves.update({(x, y)})
+            self.pieces = np.copy(old_board)
+            self.ko = old_ko
+      print('Ko after:', self.ko)
+      return list(moves)
 
     def execute_move(self, move, color):
       """Perform the given move on the board; flips pieces as necessary.
       color gives the color pf the piece to play (1=white,-1=black)
       """
-      self.ko = (-1, -1)
       self[move[1]][move[0]] = color
-      print('EXECUTED for', color)
       self.captures(-color);
     
     def captures(self, color):
@@ -59,9 +67,10 @@ class Board():
             block = []
             self.count(x, y, color, liberties, block)
             if len(liberties) == 0:
-              if len(block) == 1: self.ko = (block[0][1], block[0][0])
+              if len(block) == 1:
+                self.ko = (block[0][1], block[0][0])
+                print('Init ko', self.ko)
               for captured in block:
-                print('KO init:', self.ko, block, captured[0], captured[1])
                 self[captured[0]][captured[1]] = 0
             self.restore_board()
 
@@ -78,12 +87,6 @@ class Board():
       elif self[x][y] == 0:
         self[x][y] = 3
         liberties.append((x, y))
-
-      #print('PRINT BOARD')
-      #for y in range(self.n):
-      #  for x in range(self.n):
-      #    print(self[y][x], end=' ')
-      #  print('')
 
     def restore_board(self):
       for y in range(self.n):

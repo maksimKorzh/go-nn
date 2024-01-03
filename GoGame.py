@@ -35,40 +35,40 @@ class GoGame(Game):
     def getNextState(self, board, player, action):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
-        # if action == self.n*self.n: # TODO: pass? not valid?
-        #     return (board, -player)
+        if action == self.n*self.n: # TODO: pass? not valid?
+          return (board, -player)
         b = Board(self.n)
         b.pieces = np.copy(board)
-        move = action# (int(action/self.n), action%self.n)
+        move = (int(action/self.n), action%self.n)
         b.execute_move(move, player)
         return (b.pieces, -player)
 
     def getValidMoves(self, board, player):
         # return a fixed size binary vector
-        valids = [1]*self.getActionSize()
-        #b = Board(self.n)
-        #b.pieces = np.copy(board)
-        #legalMoves =  b.get_legal_moves(player)
-        #if len(legalMoves)==0:
-        #    valids[-1]=1
-        #    return np.array(valids)
-        #for x, y in legalMoves:
-        #    valids[self.n*x+y]=1
+        valids = [0]*self.getActionSize()
+        b = Board(self.n)
+        b.pieces = np.copy(board)
+        legalMoves =  b.get_legal_moves(player)
+        if len(legalMoves)==0:
+          valids[-1]=1
+          return np.array(valids)
+        for x, y in legalMoves:
+          valids[self.n*x+y]=1
         return np.array(valids)
 
     def getGameEnded(self, board, player):
         return 0
         # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
         # player = 1
-        b = Board(self.n)
-        b.pieces = np.copy(board)
-        if b.has_legal_moves(player):
-            return 0
-        if b.has_legal_moves(-player):
-            return 0
-        if b.countDiff(player) > 0:
-            return 1
-        return -1
+        #b = Board(self.n)
+        #b.pieces = np.copy(board)
+        #if b.has_legal_moves(player):
+        #    return 0
+        #if b.has_legal_moves(-player):
+        #    return 0
+        #if b.countDiff(player) > 0:
+        #    return 1
+        #return -1
 
     def getCanonicalForm(self, board, player):
         # return state if player==1, else return -state if player==-1
@@ -121,8 +121,14 @@ def test():
     board = game.getInitBoard()
     game.display(board)
     player = 1
-    action = (0,2)
+    action = (1,0)
     board, player = game.getNextState(board, player, action)
+    player = 1
+    action = (0,1)
+    board, player = game.getNextState(board, player, action)
+
+    game.display(board)
+    game.getValidMoves(board, player)
     game.display(board)
 
 #test()
