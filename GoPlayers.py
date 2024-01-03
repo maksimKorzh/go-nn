@@ -17,9 +17,9 @@ class HumanGoPlayer():
     def __init__(self, game):
         self.game = game
 
-    def play(self, board):
+    def play(self, board, ko):
         # display(board)
-        valid = self.game.getValidMoves(board, 1)
+        valid = self.game.getValidMoves(board, 1, ko)
         while True:
             input_move = input()
             input_a = input_move.split(" ")
@@ -37,7 +37,6 @@ class HumanGoPlayer():
                     # Input needs to be an integer
                     'Invalid integer'
             print('Invalid move')
-        print("RETURN ACTION:", a)
         return a
 
 

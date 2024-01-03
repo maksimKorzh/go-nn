@@ -21,7 +21,6 @@ class Board():
     def __init__(self, n):
       "Set up initial board configuration."
       self.n = n
-      self.ko = (-1, -1)
       # Create the empty board array.
       self.pieces = [None]*self.n
       for i in range(self.n):
@@ -31,35 +30,31 @@ class Board():
     def __getitem__(self, index): 
         return self.pieces[index]
 
-    def get_legal_moves(self, color):
+    def get_legal_moves(self, color, ko):
       """Returns all the legal moves for the given color.
       (1 for white, -1 for black
       """
-      print('Ko before:', self.ko)
       moves = set()
       for y in range(self.n):
         for x in range(self.n):
-          if self[y][x] == 0 and (x, y) != self.ko:
+          if self[y][x] == 0 and (x, y) != ko:
             old_board = np.copy(self.pieces)
-            old_ko = self.ko
-            self.execute_move((x, y), color)
+            self.execute_move((x, y), color, ko)
             liberties = []
             self.count(x, y, color, liberties, [])
-            #if len(liberties): moves.update({(x, y)})
-            moves.update({(x, y)})
+            if len(liberties): moves.update({(x, y)})
             self.pieces = np.copy(old_board)
-            self.ko = old_ko
-      print('Ko after:', self.ko)
       return list(moves)
 
-    def execute_move(self, move, color):
+    def execute_move(self, move, color, ko):
       """Perform the given move on the board; flips pieces as necessary.
       color gives the color pf the piece to play (1=white,-1=black)
       """
       self[move[1]][move[0]] = color
-      self.captures(-color);
+      return self.captures(-color, ko);
     
-    def captures(self, color):
+    def captures(self, color, ko):
+      new_ko = (-1, -1)
       for y in range(self.n):
         for x in range(self.n):
           if self[x][y]==color:
@@ -68,11 +63,11 @@ class Board():
             self.count(x, y, color, liberties, block)
             if len(liberties) == 0:
               if len(block) == 1:
-                self.ko = (block[0][1], block[0][0])
-                print('Init ko', self.ko)
+                new_ko = (block[0][1], block[0][0])
               for captured in block:
                 self[captured[0]][captured[1]] = 0
             self.restore_board()
+      return new_ko
 
     def count(self, x, y, color, liberties, block):
       if x < 0 or y < 0 or x >= self.n or y >= self.n: return

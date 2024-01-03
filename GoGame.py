@@ -32,7 +32,7 @@ class GoGame(Game):
       # return number of actions
       return self.n*self.n + 1 # TODO: +1 ???
 
-    def getNextState(self, board, player, action):
+    def getNextState(self, board, player, action, ko):
         # if player takes action on board, return next (board,player)
         # action must be a valid move
         if action == self.n*self.n: # TODO: pass? not valid?
@@ -40,15 +40,15 @@ class GoGame(Game):
         b = Board(self.n)
         b.pieces = np.copy(board)
         move = (int(action/self.n), action%self.n)
-        b.execute_move(move, player)
-        return (b.pieces, -player)
+        ko = b.execute_move(move, player, ko)
+        return (b.pieces, -player, ko)
 
-    def getValidMoves(self, board, player):
+    def getValidMoves(self, board, player, ko):
         # return a fixed size binary vector
         valids = [0]*self.getActionSize()
         b = Board(self.n)
         b.pieces = np.copy(board)
-        legalMoves =  b.get_legal_moves(player)
+        legalMoves =  b.get_legal_moves(player, ko)
         if len(legalMoves)==0:
           valids[-1]=1
           return np.array(valids)
@@ -120,15 +120,11 @@ def test():
     game = GoGame(5)
     board = game.getInitBoard()
     game.display(board)
+    ko = (-1, -1)
+    print('Ko after:', ko)
     player = 1
-    action = (1,0)
-    board, player = game.getNextState(board, player, action)
-    player = 1
-    action = (0,1)
-    board, player = game.getNextState(board, player, action)
-
+    action = 0
+    board, player, ko = game.getNextState(board, player, action, ko)
     game.display(board)
-    game.getValidMoves(board, player)
-    game.display(board)
-
+    print('Ko after:', ko)
 #test()
