@@ -17,8 +17,8 @@ args = dotdict({
     'tempThreshold': 15,        #
     'updateThreshold': 0.0, #0.6     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
     'maxlenOfQueue': 200000,    # Number of game examples to train the neural networks.
-    'numMCTSSims': 25,          # Number of games moves for MCTS to simulate.
-    'arenaCompare': 1, # 40         # Number of games to play during arena play to determine if new net will be accepted.
+    'numMCTSSims': 2,  #25,          # Number of games moves for MCTS to simulate.
+    'arenaCompare': 10, # 40         # Number of games to play during arena play to determine if new net will be accepted.
     'cpuct': 1,
 
     'checkpoint': './temp/',

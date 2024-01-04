@@ -34,9 +34,7 @@ class MCTS():
             probs: a policy vector where the probability of the ith action is
                    proportional to Nsa[(s,a)]**(1./temp)
         """
-        #for i in range(self.args.numMCTSSims):
-        for i in range(2):
-            print("MCTS.getActionProb: simulation", i)
+        for i in range(self.args.numMCTSSims):
             self.search(canonicalBoard, ko)
 
         s = self.game.stringRepresentation(canonicalBoard)
@@ -47,13 +45,11 @@ class MCTS():
             bestA = np.random.choice(bestAs)
             probs = [0] * len(counts)
             probs[bestA] = 1
-            print("MCTS.getActionProb: return (temp=0)", probs)
             return probs
 
         counts = [x ** (1. / temp) for x in counts]
         counts_sum = float(sum(counts))
         probs = [x / counts_sum for x in counts]
-        print("MCTS.getActionProb: return (temp=1)", probs)
         return probs
 
     def search(self, canonicalBoard, ko):
@@ -75,19 +71,12 @@ class MCTS():
         Returns:
             v: the negative of the value of the current canonicalBoard
         """
-
-        print("MCTS.search: recursive move")
-        print(canonicalBoard)
-
         s = self.game.stringRepresentation(canonicalBoard)
 
         if s not in self.Es:
             self.Es[s] = self.game.getGameEnded(canonicalBoard, 1, ko)
-            print("MCTS.search: game result", self.Es[s])
         if self.Es[s] != 0:
             # terminal node
-            print("MCTS.search: terminal node")
-            print(canonicalBoard)
             return -self.Es[s]
 
         if s not in self.Ps:

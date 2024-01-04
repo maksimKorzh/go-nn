@@ -62,16 +62,8 @@ class Coach():
 
             action = np.random.choice(len(pi), p=pi)
             board, self.curPlayer, ko = self.game.getNextState(board, self.curPlayer, action, ko)
-
-            # my temp
-            print("COACH execute episode: move in self play")
-            self.game.display(board)
-
+            #self.game.display(board)
             r = self.game.getGameEnded(board, self.curPlayer, ko)
-
-            # my temp
-            print("COACH execute episode: result", r)
-
             if r != 0:
                 return [(x[0], x[2], r * ((-1) ** (x[1] != self.curPlayer))) for x in trainExamples]
 
@@ -121,9 +113,10 @@ class Coach():
             nmcts = MCTS(self.game, self.nnet, self.args)
 
             log.info('PITTING AGAINST PREVIOUS VERSION')
-            arena = Arena(lambda x: np.argmax(pmcts.getActionProb(x, temp=0)),
-                          lambda x: np.argmax(nmcts.getActionProb(x, temp=0)), self.game)
-            pwins, nwins, draws = 0,1,0#arena.playGames(self.args.arenaCompare)
+            ko = (-1, -1)
+            arena = Arena(lambda x, y: np.argmax(pmcts.getActionProb(x, y, temp=0)),
+                          lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0)), self.game)
+            pwins, nwins, draws = arena.playGames(self.args.arenaCompare)
 
             log.info('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
             if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:
