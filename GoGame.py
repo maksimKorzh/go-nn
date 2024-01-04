@@ -65,11 +65,16 @@ class GoGame(Game):
       finalScore = b.score_game()
       threshold = abs(finalScore[1] - finalScore[-1])
       result = 1 if finalScore[1] > finalScore[-1] else -1
+
+      print("GoGame.getGameEnded: board")
+      self.display(board)
+
       if isGameOver: return result
       else:
         if threshold >= 5 and \
            finalScore[0] == 0 and \
-           finalScore[1] != self.n ** 2 - 1:
+           finalScore[1] != self.n ** 2 - 1 and \
+           finalScore[-1] != self.n ** 2 - 1:
           return result
         else: return 0
 
