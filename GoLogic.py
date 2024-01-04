@@ -44,6 +44,9 @@ class Board():
             self.count(y, x, color, liberties, [])
             if len(liberties): moves.update({(x, y)})
             #moves.update({(x, y)})
+            if color == -1:
+              print("color:", color)
+              print(self.pieces)
             self.pieces = np.copy(old_board)
       return list(moves)
 
