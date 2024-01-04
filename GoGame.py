@@ -56,14 +56,22 @@ class GoGame(Game):
         valids[self.n*x+y]=1
       return np.array(valids)
 
-    def getGameEnded(self, board, player):
+    def getGameEnded(self, board, player, ko):
       # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
       b = Board(self.n)
       b.pieces = np.copy(board)
+      validMoves = self.getValidMoves(board, player, ko)
+      isGameOver = all(element == 0 for element in validMoves[0:-1])
       finalScore = b.score_game()
-      if finalScore[0]: return 0
-      elif finalScore[1] == self.n ** 2 - 1: return 0
-      else: return 1 if finalScore[1] > finalScore[-1] else -1
+      threshold = abs(finalScore[1] - finalScore[-1])
+      result = 1 if finalScore[1] > finalScore[-1] else -1
+      if isGameOver: return result
+      else:
+        if threshold >= 5 and \
+           finalScore[0] == 0 and \
+           finalScore[1] != self.n ** 2 - 1:
+          return result
+        else: return 0
 
     def getCanonicalForm(self, board, player):
       # return state if player==1, else return -state if player==-1
