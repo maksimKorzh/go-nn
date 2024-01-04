@@ -44,7 +44,6 @@ class GoGame(Game):
       return (b.pieces, -player, ko)
 
     def getValidMoves(self, board, player, ko):
-      print("getValideMoves player", player)
       # return a fixed size binary vector
       valids = [0]*self.getActionSize()
       b = Board(self.n)
@@ -64,10 +63,7 @@ class GoGame(Game):
       finalScore = b.score_game()
       if finalScore[0]: return 0
       elif finalScore[1] == self.n ** 2 - 1: return 0
-      else:
-        result = 1 if finalScore[1] > finalScore[-1] else -1
-        print("game ended:", finalScore)
-        return result
+      else: return 1 if finalScore[1] > finalScore[-1] else -1
 
     def getCanonicalForm(self, board, player):
       # return state if player==1, else return -state if player==-1
