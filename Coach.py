@@ -112,7 +112,10 @@ class Coach():
             self.nnet.train(trainExamples)
             nmcts = MCTS(self.game, self.nnet, self.args)
 
-            log.info('PITTING AGAINST PREVIOUS VERSION')
+            log.info('SAVING NEW MODEL')
+            self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='last.pth.tar')
+
+            log.info('PLAYING AGAINST PREVIOUS VERSION')
             ko = (-1, -1)
             arena = Arena(lambda x, y: np.argmax(pmcts.getActionProb(x, y, temp=0)),
                           lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0)), self.game)

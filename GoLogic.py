@@ -41,7 +41,7 @@ class Board():
             old_board = np.copy(self.pieces)
             self.execute_move((x, y), color, ko)
             liberties = []
-            self.count(y, x, color, liberties, [])
+            self.count(y, x, color, liberties, []) 
             if len(liberties): moves.update({(x, y)})
             self.pieces = np.copy(old_board)
       return list(moves)
@@ -52,7 +52,7 @@ class Board():
       """
       self[move[1]][move[0]] = color
       return self.captures(-color, ko);
-    
+
     def captures(self, color, ko):
       new_ko = (-1, -1)
       for y in range(self.n):
@@ -64,6 +64,8 @@ class Board():
             if len(liberties) == 0:
               if len(block) == 1:
                 new_ko = (block[0][1], block[0][0])
+                # TODO: this is wrong because we can't do snap back captures
+                #       but for testing purposes this may be fine
               for captured in block:
                 self[captured[0]][captured[1]] = 0
             self.restore_board()
@@ -73,8 +75,8 @@ class Board():
       if x < 0 or y < 0 or x >= self.n or y >= self.n: return
       if self[x][y] == color:
         block.append((x, y))
-        if self[x][y] == 1: self[x][y] = 2
-        if self[x][y] == -1: self[x][y] = -2
+        if color == 1: self[x][y] = 2
+        if color == -1: self[x][y] = -2
         self.count(x, y-1, color, liberties, block)
         self.count(x, y+1, color, liberties, block)
         self.count(x-1, y, color, liberties, block)
@@ -90,7 +92,7 @@ class Board():
           if self[x][y] == -2: self[x][y] = -1
           if self[x][y] == 3: self[x][y] = 0
           if self[x][y] == 4: self[x][y] = 0
-
+    
     # Count territory territory
     def count_territory(self, x, y, pointsCount, pointsColor):
       if x < 0 or y < 0 or x >= self.n or y >= self.n: return

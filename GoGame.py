@@ -66,13 +66,16 @@ class GoGame(Game):
       threshold = abs(finalScore[1] - finalScore[-1])
       result = 1 if finalScore[1] > finalScore[-1] else -1
       if isGameOver: return result
-      else:
-        if threshold >= 5 and \
-           finalScore[0] == 0 and \
-           finalScore[1] != self.n ** 2 - 1 and \
-           finalScore[-1] != self.n ** 2 - 1:
-          return result
-        else: return 0
+      else: return 0
+
+    def getGameResult(self, board, player, ko):
+      b = Board(self.n)
+      b.pieces = np.copy(board)
+      validMoves = self.getValidMoves(board, player, ko)
+      isGameOver = all(element == 0 for element in validMoves[0:-1])
+      finalScore = b.score_game()
+      if finalScore[1] > finalScore[-1]: return 1
+      if finalScore[1] < finalScore[-1]: return -1
 
     def getCanonicalForm(self, board, player):
       # return state if player==1, else return -state if player==-1
@@ -118,15 +121,18 @@ def test():
   game = GoGame(5)
   #board = game.getInitBoard()
   board = np.array([
-    [0, 0, -1, 1, 0],
-    [0, 0, -1, 1, 0],
-    [0, 0, -1, 1, 0],
-    [-1, -1, -1, 1, 1],
-    [0, 0, -1, 1, 0],
+    [-1, -1 , -1 , -1 ,  0],
+    [ 0, -1 ,  0 , -1 ,  0],
+    [-1,  1 , -1 ,  0 , -1],
+    [-1,  1 , -1 ,  0 ,  0],
+    [ 1,  0 ,  1 , -1 ,  0],
   ])
   player = 1
   ko = (-1, -1)
   game.display(board)
-  print(game.getGameEnded(board, player))
+  print(game.getGameEnded(board, player, ko))
   game.display(board)
+  print(game.getValidMoves(board, -1, ko))
+  b, p, k = game.getNextState(board, -1, 9, ko)
+  game.display(b)
 #test()

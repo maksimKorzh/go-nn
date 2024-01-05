@@ -1,5 +1,6 @@
 import logging
 import math
+import inspect
 
 import numpy as np
 
@@ -76,6 +77,9 @@ class MCTS():
         if s not in self.Es:
             self.Es[s] = self.game.getGameEnded(canonicalBoard, 1, ko)
         if self.Es[s] != 0:
+            #print("MCTS.search: return terminal node")
+            #print(canonicalBoard)
+            #print("result:", self.Es[s])
             # terminal node
             return -self.Es[s]
 
@@ -98,6 +102,8 @@ class MCTS():
 
             self.Vs[s] = valids
             self.Ns[s] = 0
+            #print("MCTS.searc: return leaf node")
+            #print(canonicalBoard)
             return -v
 
         valids = self.Vs[s]
@@ -117,11 +123,21 @@ class MCTS():
                     cur_best = u
                     best_act = a
 
+        #print("Current board:")
+        #print(canonicalBoard)
+        #print("Action:", best_act)
+        #print("Ko:", ko)
+
+
         a = best_act
         next_s, next_player, next_ko = self.game.getNextState(canonicalBoard, 1, a, ko)
         next_s = self.game.getCanonicalForm(next_s, next_player)
 
-        v = self.search(next_s, next_ko)
+        if len(inspect.stack(0)) > 100:
+          log.info("Game drawn, preventing stack overflow")
+          return -2 # draw
+        else:
+          v = self.search(next_s, next_ko)
 
         if (s, a) in self.Qsa:
             self.Qsa[(s, a)] = (self.Nsa[(s, a)] * self.Qsa[(s, a)] + v) / (self.Nsa[(s, a)] + 1)
