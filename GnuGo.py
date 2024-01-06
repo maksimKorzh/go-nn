@@ -32,7 +32,7 @@ class GnuGo():
   def printBoardState(self):
     self.gnugo.sendline('showboard')
     self.gnugo.expect('= (.*)', timeout = -1)
-    brd = self.gnugo.after.strip()
+    brd = self.gnugo.after.strip().split('=')[-1]
     brd = brd.replace('WHITE (O) has captured ', '0: ')
     brd = brd.replace('BLACK (X) has captured ', 'X: ')
     brd = brd.replace('stones', 'caps')
@@ -52,11 +52,12 @@ class GnuGo():
     return brdArr
 
   def getAllLegal(self, color):
-    self.gnugo.sendline('all_legal ' + 'B' if color == 1 else 'W')
+    cmd = 'all_legal ' + ('B' if color == 1 else 'W')
+    self.gnugo.sendline(cmd)
     self.gnugo.expect('= (.*)', timeout = -1)
     moves = self.gnugo.after.strip().split()[1:]
     for i in range(len(moves)):
-      moves[i] = ('ABCDEFGHJKLMNOPQRST'.index(moves[i][0]), int(moves[i][1]))
+      moves[i] = ('ABCDEFGHJKLMNOPQRST'.index(moves[i][0]), self.size-int(moves[i][1]))
     return set(moves)
 
   def play(self, move, color):
@@ -69,6 +70,7 @@ class GnuGo():
 def test():
   gnugo = GnuGo(5, 5.5)
   pieces = gnugo.getBoardState()
-  gnugo.getAllLegal(1)
-  print(pieces)
+  moves = gnugo.getAllLegal(1)
+  gnugo.printBoardState()
+  print(moves)
 #test()

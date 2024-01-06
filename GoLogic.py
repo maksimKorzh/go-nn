@@ -27,7 +27,7 @@ class Board():
       for move in moves:
         self.gnugo.play(move, color)
         color = color * -1
-      self.pieces = self.gnugo.getBoardState() 
+      self.pieces = self.gnugo.getBoardState()
       
       #self.pieces = [None]*self.n
       #for i in range(self.n):
@@ -51,10 +51,8 @@ class Board():
       #      self.count(y, x, color, liberties, []) 
       #      if len(liberties): moves.update({(x, y)})
       #      self.pieces = np.copy(old_board)
-
+      
       moves = self.gnugo.getAllLegal(color)
-      print('Legal moves:', moves)
-      self.gnugo.printBoardState()
       return list(moves)
 
     def execute_move(self, move, color, ko):
@@ -69,7 +67,6 @@ class Board():
 
       self.gnugo.play(move, color)
       self.pieces = self.gnugo.getBoardState()
-      self.gnugo.printBoardState()
       return (-1, -1) # TODO: remove ko from all over the way...
   
     def captures(self, color, ko):

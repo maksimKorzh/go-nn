@@ -39,32 +39,22 @@ class GoGame(Game):
       if action == self.n*self.n: # TODO: pass? not valid?
         return (board, -player)
       b = Board(self.n, self.moves)
-      b.pieces = np.copy(board)
       move = (int(action/self.n), action%self.n)
-      
-
       self.moves.append(move)
-      
-
       ko = b.execute_move(move, player, ko)
       return (b.pieces, -player, ko)
 
     def getValidMoves(self, board, player, ko):
       # return a fixed size binary vector
-      #valids = [0]*self.getActionSize()
+      valids = [0]*self.getActionSize()
       b = Board(self.n, self.moves)
-      b.pieces = np.copy(board)
-      print("Board before getValidMoves")
-      print(b.pieces)
-      #legalMoves =  b.get_legal_moves(player, ko)
-      #if len(legalMoves)==0:
-      #  valids[-1]=1
-      #  return np.array(valids)
-      #for x, y in legalMoves:
-      #  valids[self.n*x+y]=1
-      #return np.array(valids)
-
-      return [1]*self.getActionSize()
+      legalMoves =  b.get_legal_moves(player, ko)
+      if len(legalMoves)==0:
+        valids[-1]=1
+        return np.array(valids)
+      for x, y in legalMoves:
+        valids[self.n*x+y]=1
+      return np.array(valids)
 
     def getGameEnded(self, board, player, ko):
       # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
