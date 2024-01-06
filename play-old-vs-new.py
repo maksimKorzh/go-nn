@@ -27,7 +27,7 @@ n1p = lambda x, y: np.argmax(mcts1.getActionProb(x, y, temp=0))
 
 # New net
 n2 = NNet(g)
-n2.load_checkpoint('./models', '5x5_1-iteration_100-episodes_10-epochs.pth.tar')
+n2.load_checkpoint('./models', '5x5_2-iteration_100-episodes_10-epochs.pth.tar')
 args2 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
 mcts2 = MCTS(g, n2, args2)
 n2p = lambda x, y: np.argmax(mcts2.getActionProb(x, y, temp=0))

@@ -18,10 +18,11 @@ class GoGame(Game):
 
     def __init__(self, n):
       self.n = n
+      self.moves = []
 
     def getInitBoard(self):
       # return initial board (numpy board)
-      b = Board(self.n)
+      b = Board(self.n, self.moves)
       return np.array(b.pieces)
 
     def getBoardSize(self):
@@ -37,28 +38,37 @@ class GoGame(Game):
       # action must be a valid move
       if action == self.n*self.n: # TODO: pass? not valid?
         return (board, -player)
-      b = Board(self.n)
+      b = Board(self.n, self.moves)
       b.pieces = np.copy(board)
       move = (int(action/self.n), action%self.n)
+      
+
+      self.moves.append(move)
+      
+
       ko = b.execute_move(move, player, ko)
       return (b.pieces, -player, ko)
 
     def getValidMoves(self, board, player, ko):
       # return a fixed size binary vector
-      valids = [0]*self.getActionSize()
-      b = Board(self.n)
+      #valids = [0]*self.getActionSize()
+      b = Board(self.n, self.moves)
       b.pieces = np.copy(board)
-      legalMoves =  b.get_legal_moves(player, ko)
-      if len(legalMoves)==0:
-        valids[-1]=1
-        return np.array(valids)
-      for x, y in legalMoves:
-        valids[self.n*x+y]=1
-      return np.array(valids)
+      print("Board before getValidMoves")
+      print(b.pieces)
+      #legalMoves =  b.get_legal_moves(player, ko)
+      #if len(legalMoves)==0:
+      #  valids[-1]=1
+      #  return np.array(valids)
+      #for x, y in legalMoves:
+      #  valids[self.n*x+y]=1
+      #return np.array(valids)
+
+      return [1]*self.getActionSize()
 
     def getGameEnded(self, board, player, ko):
       # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
-      b = Board(self.n)
+      b = Board(self.n, self.moves)
       b.pieces = np.copy(board)
       validMoves = self.getValidMoves(board, player, ko)
       isGameOver = all(element == 0 for element in validMoves[0:-1])
@@ -69,7 +79,7 @@ class GoGame(Game):
       else: return 0
 
     def getGameResult(self, board, player, ko):
-      b = Board(self.n)
+      b = Board(self.n, self.moves)
       b.pieces = np.copy(board)
       validMoves = self.getValidMoves(board, player, ko)
       isGameOver = all(element == 0 for element in validMoves[0:-1])
@@ -119,20 +129,6 @@ class GoGame(Game):
 
 def test():
   game = GoGame(5)
-  #board = game.getInitBoard()
-  board = np.array([
-    [-1, -1 , -1 , -1 ,  0],
-    [ 0, -1 ,  0 , -1 ,  0],
-    [-1,  1 , -1 ,  0 , -1],
-    [-1,  1 , -1 ,  0 ,  0],
-    [ 1,  0 ,  1 , -1 ,  0],
-  ])
-  player = 1
-  ko = (-1, -1)
-  game.display(board)
-  print(game.getGameEnded(board, player, ko))
-  game.display(board)
-  print(game.getValidMoves(board, -1, ko))
-  b, p, k = game.getNextState(board, -1, 9, ko)
-  game.display(b)
-#test()
+  board = game.getInitBoard()
+  #game.display(b)
+test()
