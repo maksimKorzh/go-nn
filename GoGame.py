@@ -59,23 +59,23 @@ class GoGame(Game):
     def getGameEnded(self, board, player, ko):
       # return 0 if not ended, 1 if player 1 won, -1 if player 1 lost
       b = Board(self.n, self.moves)
-      b.pieces = np.copy(board)
       validMoves = self.getValidMoves(board, player, ko)
-      isGameOver = all(element == 0 for element in validMoves[0:-1])
+      isGameOver = all(element == 0 for element in validMoves[0: -1])
+      shouldPlay = b.should_play(player)
       finalScore = b.score_game()
-      threshold = abs(finalScore[1] - finalScore[-1])
-      result = 1 if finalScore[1] > finalScore[-1] else -1
-      if isGameOver: return result
+      if isGameOver and shouldPlay == 0: return finalScore
       else: return 0
 
     def getGameResult(self, board, player, ko):
+      #b = Board(self.n, self.moves)
+      #b.pieces = np.copy(board)
+      #validMoves = self.getValidMoves(board, player, ko)
+      #isGameOver = all(element == 0 for element in validMoves[0:-1])
+      #finalScore = b.score_game()
+      #if finalScore[1] > finalScore[-1]: return 1
+      #if finalScore[1] < finalScore[-1]: return -1
       b = Board(self.n, self.moves)
-      b.pieces = np.copy(board)
-      validMoves = self.getValidMoves(board, player, ko)
-      isGameOver = all(element == 0 for element in validMoves[0:-1])
-      finalScore = b.score_game()
-      if finalScore[1] > finalScore[-1]: return 1
-      if finalScore[1] < finalScore[-1]: return -1
+      return b.score_game()
 
     def getCanonicalForm(self, board, player):
       # return state if player==1, else return -state if player==-1

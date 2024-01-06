@@ -128,13 +128,17 @@ class Board():
 
     # Evaluate game result
     def score_game(self):
-      scorePosition = [0, 0, 0];
-      for y in range(self.n):
-        for x in range(self.n):
-          if self[x][y]: continue
-          pointsCount = []
-          pointsColor = []
-          result = self.count_territory(x, y, pointsCount, pointsColor)
-          scorePosition[result[0]] += result[1];
-      self.restore_board();
-      return scorePosition;
+      #scorePosition = [0, 0, 0];
+      #for y in range(self.n):
+      #  for x in range(self.n):
+      #    if self[x][y]: continue
+      #    pointsCount = []
+      #    pointsColor = []
+      #    result = self.count_territory(x, y, pointsCount, pointsColor)
+      #    scorePosition[result[0]] += result[1];
+      #self.restore_board();
+      return self.gnugo.estimateScore();
+
+    # Any reason to play?
+    def should_play(self, color):
+      return self.gnugo.generateMove(color)

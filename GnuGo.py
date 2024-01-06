@@ -40,9 +40,11 @@ class GnuGo():
 
   def getBoardState(self):
     self.gnugo.sendline('showboard')
+    self.gnugo.flush()
     self.gnugo.expect('= (.*)', timeout = -1)
     brdStr = self.gnugo.after.strip().split('=')[-1][1:-1]
     brdStr = [row.replace(' ', '')[1: self.size+1] for row in brdStr.split('\n')[2:-1]]
+    if len(brdStr) < self.size: self.getBoardState();
     brdArr = zeros_array = np.zeros((self.size, self.size)).astype(int)
     for y in range(len(brdStr)):
       line = brdStr[y]
@@ -67,10 +69,23 @@ class GnuGo():
     self.gnugo.sendline(moveCmd)
     self.gnugo.expect('= (.*)', timeout = -1)
 
+  def estimateScore(self):
+    self.gnugo.sendline('estimate_score')
+    self.gnugo.expect('= (.*)', timeout = -1)
+    print('GnuGo.estimateScore:', self.gnugo.after)
+    try: return (1 if self.gnugo.after[2] == 'B' else -1)
+    except: self.estimateScore()
+
+  def generateMove(self, color):
+    self.gnugo.sendline('genmove ' + ('B' if color == 1 else 'W'))
+    self.gnugo.expect('= (.*)', timeout = -1)
+    return (0 if 'PASS' in self.gnugo.after else 1)
+    
 def test():
   gnugo = GnuGo(5, 5.5)
   pieces = gnugo.getBoardState()
   moves = gnugo.getAllLegal(1)
   gnugo.printBoardState()
   print(moves)
+  gnugo.estimateScore()
 #test()
