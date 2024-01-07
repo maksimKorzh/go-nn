@@ -4,6 +4,7 @@ import sys
 from collections import deque
 from pickle import Pickler, Unpickler
 from random import shuffle
+from GoGame import GoGame
 
 import numpy as np
 from tqdm import tqdm
@@ -118,11 +119,12 @@ class Coach():
             log.info('PLAYING AGAINST PREVIOUS VERSION')
             ko = (-1, -1)
             arena = Arena(lambda x, y: np.argmax(pmcts.getActionProb(x, y, temp=0)),
-                          lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0)), self.game)
-            pwins, nwins, draws = arena.playGames(self.args.arenaCompare)
+                          lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0)), self.game, display=GoGame.display)
+            pwins, nwins, draws = arena.playGames(self.args.arenaCompare, verbose=True)
 
             log.info('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
-            if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:
+            if nwins < pwins:
+            #if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:
                 log.info('REJECTING NEW MODEL')
                 self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
             else:

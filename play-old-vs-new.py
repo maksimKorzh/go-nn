@@ -20,15 +20,15 @@ g = GoGame(5)
 
 # Old net
 n1 = NNet(g)
-n1.load_checkpoint('./temp', 'last.pth.tar')
-args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
+n1.load_checkpoint('./temp', 'checkpoint_6.pth.tar')
+args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0, 'depth_limit': 100})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x, y: np.argmax(mcts1.getActionProb(x, y, temp=0))
 
 # New net
 n2 = NNet(g)
-n2.load_checkpoint('./models', '5x5_1-iteration_100-episodes_10-epochs.pth.tar')
-args2 = dotdict({'numMCTSSims': 50, 'cpuct':1.0})
+n2.load_checkpoint('./temp', 'checkpoint_1.pth.tar')
+args2 = dotdict({'numMCTSSims': 50, 'cpuct':1.0, 'depth_limit': 100})
 mcts2 = MCTS(g, n2, args2)
 n2p = lambda x, y: np.argmax(mcts2.getActionProb(x, y, temp=0))
 #n2p = HumanGoPlayer1(g).play

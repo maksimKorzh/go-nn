@@ -79,7 +79,7 @@ class GoGame(Game):
       finalScore = b.score_game()
       if finalScore[1] > finalScore[-1]: return 1
       elif finalScore[1] < finalScore[-1]: return -1
-      else: return 2
+      else: return -1
 
     def getCanonicalForm(self, board, player):
       # return state if player==1, else return -state if player==-1

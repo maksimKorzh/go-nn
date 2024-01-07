@@ -133,11 +133,8 @@ class MCTS():
         next_s, next_player, next_ko = self.game.getNextState(canonicalBoard, 1, a, ko)
         next_s = self.game.getCanonicalForm(next_s, next_player)
 
-        if len(inspect.stack(0)) > 100:
-          log.info("Game drawn, preventing stack overflow")
-          return -2 # draw
-        else:
-          v = self.search(next_s, next_ko)
+        if len(inspect.stack(0)) > self.args.depth_limit: return next_player * -1
+        else: v = self.search(next_s, next_ko)
 
         if (s, a) in self.Qsa:
             self.Qsa[(s, a)] = (self.Nsa[(s, a)] * self.Qsa[(s, a)] + v) / (self.Nsa[(s, a)] + 1)
