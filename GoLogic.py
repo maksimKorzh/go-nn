@@ -12,26 +12,19 @@ x is the column, y is the row.
 '''
 
 import numpy as np
-from GnuGo import GnuGo
 
 class Board():
 
     # list of all 8 directions on the board, as (x,y) offsets
     #__directions = [(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1),(0,1)]
 
-    def __init__(self, n, moves):
+    def __init__(self, n):
       "Set up initial board configuration."
       self.n = n
-      self.gnugo = GnuGo(n, 5.5)
-      color = 1
-      for move in moves:
-        self.gnugo.play(move, color)
-        color = color * -1
-      self.pieces = self.gnugo.getBoardState()
-      
-      #self.pieces = [None]*self.n
-      #for i in range(self.n):
-      #  self.pieces[i] = [0]*self.n
+      # Create the empty board array.
+      self.pieces = [None]*self.n
+      for i in range(self.n):
+        self.pieces[i] = [0]*self.n
 
     # add [][] indexer syntax to the Board
     def __getitem__(self, index): 
@@ -41,34 +34,25 @@ class Board():
       """Returns all the legal moves for the given color.
       (1 for white, -1 for black
       """
-      #moves = set()
-      #for y in range(self.n):
-      #  for x in range(self.n):
-      #    if self[y][x] == 0 and (x, y) != ko:
-      #      old_board = np.copy(self.pieces)
-      #      self.execute_move((x, y), color, ko)
-      #      liberties = []
-      #      self.count(y, x, color, liberties, []) 
-      #      if len(liberties): moves.update({(x, y)})
-      #      self.pieces = np.copy(old_board)
-      
-      moves = self.gnugo.getAllLegal(color)
+      moves = set()
+      for y in range(self.n):
+        for x in range(self.n):
+          if self[y][x] == 0 and (x, y) != ko:
+            old_board = np.copy(self.pieces)
+            self.execute_move((x, y), color, ko)
+            liberties = []
+            self.count(y, x, color, liberties, []) 
+            if len(liberties): moves.update({(x, y)})
+            self.pieces = np.copy(old_board)
       return list(moves)
 
     def execute_move(self, move, color, ko):
       """Perform the given move on the board; flips pieces as necessary.
       color gives the color pf the piece to play (1=white,-1=black)
       """
-      #move = moves[-1] 
-      #self[move[1]][move[0]] = color
-      #print(self.pieces)
-      #print(self.__dict__)
-      #return self.captures(-color, ko);
+      self[move[1]][move[0]] = color
+      return self.captures(-color, ko);
 
-      self.gnugo.play(move, color)
-      self.pieces = self.gnugo.getBoardState()
-      return (-1, -1) # TODO: remove ko from all over the way...
-  
     def captures(self, color, ko):
       new_ko = (-1, -1)
       for y in range(self.n):
@@ -128,17 +112,13 @@ class Board():
 
     # Evaluate game result
     def score_game(self):
-      #scorePosition = [0, 0, 0];
-      #for y in range(self.n):
-      #  for x in range(self.n):
-      #    if self[x][y]: continue
-      #    pointsCount = []
-      #    pointsColor = []
-      #    result = self.count_territory(x, y, pointsCount, pointsColor)
-      #    scorePosition[result[0]] += result[1];
-      #self.restore_board();
-      return self.gnugo.estimateScore();
-
-    # Any reason to play?
-    def should_play(self, color):
-      return self.gnugo.generateMove(color)
+      scorePosition = [0, 0, 0];
+      for y in range(self.n):
+        for x in range(self.n):
+          if self[x][y]: continue
+          pointsCount = []
+          pointsColor = []
+          result = self.count_territory(x, y, pointsCount, pointsColor)
+          scorePosition[result[0]] += result[1];
+      self.restore_board();
+      return scorePosition;
