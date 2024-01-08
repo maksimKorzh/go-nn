@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class RandomGoPlayer():
    def __init__(self, game):
      self.game = game

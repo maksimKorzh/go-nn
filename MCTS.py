@@ -76,12 +76,7 @@ class MCTS():
 
         if s not in self.Es:
             self.Es[s] = self.game.getGameEnded(canonicalBoard, 1, ko)
-        if self.Es[s] != 0:
-            #print("MCTS.search: return terminal node")
-            #print(canonicalBoard)
-            #print("result:", self.Es[s])
-            # terminal node
-            return -self.Es[s]
+        if self.Es[s] != 0: return -self.Es[s]
 
         if s not in self.Ps:
             # leaf node
@@ -102,8 +97,6 @@ class MCTS():
 
             self.Vs[s] = valids
             self.Ns[s] = 0
-            #print("MCTS.searc: return leaf node")
-            #print(canonicalBoard)
             return -v
 
         valids = self.Vs[s]
@@ -122,12 +115,6 @@ class MCTS():
                 if u > cur_best:
                     cur_best = u
                     best_act = a
-
-        #print("Current board:")
-        #print(canonicalBoard)
-        #print("Action:", best_act)
-        #print("Ko:", ko)
-
 
         a = best_act
         next_s, next_player, next_ko = self.game.getNextState(canonicalBoard, 1, a, ko)

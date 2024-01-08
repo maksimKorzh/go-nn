@@ -23,7 +23,7 @@ args = dotdict({
     'depth_limit': 100,
     'checkpoint': './temp/',
     'load_model': True,
-    'load_folder_file': ('./models','5x5_20-iterations_10-episodes_3-epochs.pth.tar'),
+    'load_folder_file': ('./models','5x5_30-iterations_10-episodes_3-epochs.pth.tar'),
     'numItersForTrainExamplesHistory': 20,
 })
 

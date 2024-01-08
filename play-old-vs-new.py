@@ -31,7 +31,6 @@ n2.load_checkpoint('./models', '5x5_10-iterations_10-episodes_3-epochs.pth.tar')
 args2 = dotdict({'numMCTSSims': 50, 'cpuct':1.0, 'depth_limit': 100})
 mcts2 = MCTS(g, n2, args2)
 n2p = lambda x, y: np.argmax(mcts2.getActionProb(x, y, temp=0))
-#n2p = HumanGoPlayer1(g).play
 
 print('PLAYING AGAINST PREVIOUS VERSION')
 arena = Arena.Arena(n2p, n1p, g, display=GoGame.display)

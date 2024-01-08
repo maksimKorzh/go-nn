@@ -22,6 +22,6 @@ args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0, 'depth_limit': 100})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x, y: np.argmax(mcts1.getActionProb(x, y, temp=0))
 
-player2 = HumanGoPlayer1(g).play
-arena = Arena.Arena(n1p, player2, g, display=GoGame.display)
+n2p = HumanGoPlayer1(g).play
+arena = Arena.Arena(n1p, n2p, g, display=GoGame.display)
 print(arena.playGames(2, verbose=True))
