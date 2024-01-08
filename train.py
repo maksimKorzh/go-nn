@@ -22,8 +22,8 @@ args = dotdict({
     'cpuct': 1,
     'depth_limit': 100,
     'checkpoint': './temp/',
-    'load_model': False,
-    'load_folder_file': ('./models','5x5_1-iteration_100-episodes_10-epochs.pth.tar'),
+    'load_model': True,
+    'load_folder_file': ('./models','5x5_20-iterations_10-episodes_3-epochs.pth.tar'),
     'numItersForTrainExamplesHistory': 20,
 })
 

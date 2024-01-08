@@ -20,20 +20,20 @@ g = GoGame(5)
 
 # Old net
 n1 = NNet(g)
-n1.load_checkpoint('./temp', 'checkpoint_6.pth.tar')
+n1.load_checkpoint('./temp', 'best.pth.tar')
 args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0, 'depth_limit': 100})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x, y: np.argmax(mcts1.getActionProb(x, y, temp=0))
 
 # New net
 n2 = NNet(g)
-n2.load_checkpoint('./temp', 'checkpoint_1.pth.tar')
+n2.load_checkpoint('./models', '5x5_10-iterations_10-episodes_3-epochs.pth.tar')
 args2 = dotdict({'numMCTSSims': 50, 'cpuct':1.0, 'depth_limit': 100})
 mcts2 = MCTS(g, n2, args2)
 n2p = lambda x, y: np.argmax(mcts2.getActionProb(x, y, temp=0))
 #n2p = HumanGoPlayer1(g).play
 
 print('PLAYING AGAINST PREVIOUS VERSION')
-arena = Arena.Arena(n1p, n2p, g, display=GoGame.display)
+arena = Arena.Arena(n2p, n1p, g, display=GoGame.display)
 pwins, nwins, draws = arena.playGames(10, verbose=True)
-print("Previous wins:", pwins, "New wins:", nwins, "Draws:", draws)
+print("(X) wins:", pwins, "; (0) wins:", nwins, "; Draws:", draws)

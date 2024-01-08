@@ -118,10 +118,16 @@ class Coach():
 
             log.info('PLAYING AGAINST PREVIOUS VERSION')
             ko = (-1, -1)
-            arena = Arena(lambda x, y: np.argmax(pmcts.getActionProb(x, y, temp=0)),
-                          lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0)), self.game, display=GoGame.display)
-            pwins, nwins, draws = arena.playGames(self.args.arenaCompare, verbose=True)
-
+            n1p = lambda x, y: np.argmax(pmcts.getActionProb(x, y, temp=0))  # Old network
+            n2p = lambda x, y: np.argmax(nmcts.getActionProb(x, y, temp=0))  # New network
+            log.info('(X) is new network; (0) is old network')
+            arena = Arena(n2p, n1p, self.game, display=GoGame.display)
+            n2pBwins, n1pWwins, draws = arena.playGames(self.args.arenaCompare, verbose=True)
+            log.info('(X) is old network; (0) is new network')
+            arena = Arena(n1p, n2p, self.game, display=GoGame.display)
+            n1pBwins, n2pWwins, draws = arena.playGames(self.args.arenaCompare, verbose=True)
+            nwins = n2pBwins + n2pWwins
+            pwins = n1pBwins + n1pWwins
             log.info('NEW/PREV WINS : %d / %d ; DRAWS : %d' % (nwins, pwins, draws))
             if nwins < pwins:
             #if pwins + nwins == 0 or float(nwins) / (pwins + nwins) < self.args.updateThreshold:

@@ -71,15 +71,15 @@ class GoGame(Game):
          finalScore[0] == 0: return result
       else: return 0
 
-    def getGameResult(self, board, player, ko):
-      b = Board(self.n)
-      b.pieces = np.copy(board)
-      validMoves = self.getValidMoves(board, player, ko)
-      isGameOver = all(element == 0 for element in validMoves[0:-1])
-      finalScore = b.score_game()
-      if finalScore[1] > finalScore[-1]: return 1
-      elif finalScore[1] < finalScore[-1]: return -1
-      else: return -1
+    #def getGameResult(self, board, player, ko):
+    #  b = Board(self.n)
+    #  b.pieces = np.copy(board)
+    #  validMoves = self.getValidMoves(board, player, ko)
+    #  isGameOver = all(element == 0 for element in validMoves[0:-1])
+    #  finalScore = b.score_game()
+    #  if finalScore[1] > finalScore[-1]: return 1
+    #  elif finalScore[1] < finalScore[-1]: return -1
+    #  else: return -1
 
     def getCanonicalForm(self, board, player):
       # return state if player==1, else return -state if player==-1
