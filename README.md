@@ -10,13 +10,17 @@ Just run **python train.py**, it would complete a single cycle
 of training. You can then continue training with the existing
 model.
 
+# How to change board size
+You can simply change the arg to Game() to a desired size,
+beware though, training on larger board takes much longer
+and also NN arch might need to get improved as well as
+some additional changes to game logic and scoring.
+
 # How to use it?
 You can play vs the model you've trained yourself or <a href="https://github.com/maksimKorzh/go-nn/releases/tag/0.1">download</a>
 pre-trained models from the releases. Adjust path to NN model
 in **play-nn.py** or **play-old-vs-new.py** and play vs the
 network yourself or watch it playing itself or other models
 
-# Still too complicated?
-Watch me running matches between different models during
-the training process
+# Watch how it works
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/5UYA-V2a3cc/0.jpg)](https://www.youtube.com/watch?v=5UYA-V2a3cc&list=PLmN0neTso3JyAmv7LWhA8GBGUWoxXoysa)
