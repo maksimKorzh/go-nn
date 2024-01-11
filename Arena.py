@@ -58,20 +58,16 @@ class Arena():
             assert self.display
             print("Game over: Turn ", str(it), "Result ", str(self.game.getGameEnded(board, curPlayer, ko)))
             self.display(board)
-        return curPlayer * self.game.getGameEnded(board, curPlayer, ko)
+        return self.game.getGameEnded(board, curPlayer, ko)
 
     def playGames(self, num, verbose=False):
         """
-        Plays num games in which player1 starts num/2 games and player2 starts
-        num/2 games.
-
         Returns:
             oneWon: games won by player1
             twoWon: games won by player2
             draws:  games won by nobody
         """
 
-        #num = int(num / 2)
         oneWon = 0
         twoWon = 0
         draws = 0
@@ -83,16 +79,5 @@ class Arena():
                 twoWon += 1
             else:
                 draws += 1
-
-        #self.player1, self.player2 = self.player2, self.player1
-
-        #for _ in tqdm(range(num), desc="Arena.playGames (2)"):
-        #    gameResult = self.playGame(verbose=verbose)
-        #    if gameResult == -1:
-        #        oneWon += 1
-        #    elif gameResult == 1:
-        #        twoWon += 1
-        #    else:
-        #        draws += 1
-
+            print('one:', oneWon, 'two:', twoWon, 'draw:', draws)
         return oneWon, twoWon, draws
