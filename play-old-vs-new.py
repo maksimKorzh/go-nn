@@ -21,7 +21,7 @@ g = GoGame(5)
 # Old net
 n1 = NNet(g)
 #n1.load_checkpoint('./temp', 'best.pth.tar')
-n1.load_checkpoint('./models', '5x5_60-iterations_10-episodes_3-epochs.pth.tar')
+n1.load_checkpoint('./models', '5x5_200-iterations_10-episodes_3-epochs.pth.tar')
 args1 = dotdict({'numMCTSSims': 50, 'cpuct':1.0, 'depth_limit': 100})
 mcts1 = MCTS(g, n1, args1)
 n1p = lambda x, y: np.argmax(mcts1.getActionProb(x, y, temp=0))
